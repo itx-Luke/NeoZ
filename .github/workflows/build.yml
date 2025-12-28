@@ -1,0 +1,51 @@
+name: Build Neo-Z
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '6.6.0'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_mingw'
+        modules: 'qtwebview'
+        cache: true
+        
+    - name: Configure CMake
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles"
+      
+    - name: Build
+      run: cmake --build build --config Release --parallel
+      
+    - name: Run Tests
+      run: ctest --test-dir build --output-on-failure
+      continue-on-error: true
+      
+    - name: Upload Build Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: Neo-Z-Windows
+        path: build/appNeo-Z.exe
+        retention-days: 30
+
+  # Future: Add macOS and Linux builds
+  # build-macos:
+  #   runs-on: macos-latest
+  #   ...
+  
+  # build-linux:
+  #   runs-on: ubuntu-latest
+  #   ...

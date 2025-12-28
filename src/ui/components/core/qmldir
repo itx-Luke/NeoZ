@@ -1,0 +1,11 @@
+module NeoZCore
+
+NeoZText 1.0 NeoZText.qml
+NeoZButton 1.0 NeoZButton.qml
+NeoZSlider 1.0 NeoZSlider.qml
+NeoZToggle 1.0 NeoZToggle.qml
+NeoZCheckbox 1.0 NeoZCheckbox.qml
+NeoZPanel 1.0 NeoZPanel.qml
+NeoZProgressBar 1.0 NeoZProgressBar.qml
+NeoZCard 1.0 NeoZCard.qml
+NeoZComboBox 1.0 NeoZComboBox.qml
