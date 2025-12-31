@@ -17,7 +17,7 @@ AdbConnection::~AdbConnection()
     disconnect();
     if (m_asyncProcess) {
         m_asyncProcess->kill();
-        m_asyncProcess->deleteLater();
+        // unique_ptr handles deletion automatically
     }
 }
 
@@ -121,8 +121,8 @@ void AdbConnection::processAsyncQueue()
     AsyncCommand cmd = m_asyncQueue.dequeue();
     
     if (!m_asyncProcess) {
-        m_asyncProcess = new QProcess(this);
-        QObject::connect(m_asyncProcess, 
+        m_asyncProcess = std::make_unique<QProcess>(this);
+        QObject::connect(m_asyncProcess.get(), 
                         QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
                         this, &AdbConnection::onProcessFinished);
     }

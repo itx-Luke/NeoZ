@@ -59,14 +59,14 @@ NeoController::NeoController(QObject *parent)
     qDebug() << "[NeoController] Constructor starting...";
     
     qDebug() << "[NeoController] Creating AiAdvisor...";
-    m_aiAdvisor = new AiAdvisor(this);
+    m_aiAdvisor = std::make_unique<AiAdvisor>(this);
 
-    connect(m_aiAdvisor, &AiAdvisor::recommendationReady,
+    connect(m_aiAdvisor.get(), &AiAdvisor::recommendationReady,
             this, &NeoController::onRecommendationReady);
-    connect(m_aiAdvisor, &AiAdvisor::analysisError,
+    connect(m_aiAdvisor.get(), &AiAdvisor::analysisError,
             this, &NeoController::onAiError);
 
-    connect(m_aiAdvisor, &AiAdvisor::statusChanged, this, [this]() {
+    connect(m_aiAdvisor.get(), &AiAdvisor::statusChanged, this, [this]() {
         m_aiStatus = m_aiAdvisor->status();
         m_aiProcessing = m_aiAdvisor->isProcessing();
         emit aiStatusChanged();
@@ -111,8 +111,8 @@ NeoController::NeoController(QObject *parent)
     // CRITICAL: Initialize m_adbProcess BEFORE calling updateSystemMetrics
     // because updateSystemMetrics()->startAdbCheck() uses m_adbProcess
     qDebug() << "[NeoController] Creating ADB process...";
-    m_adbProcess = new QProcess(this);
-    connect(m_adbProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this]() {
+    m_adbProcess = std::make_unique<QProcess>(this);
+    connect(m_adbProcess.get(), QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, [this]() {
         QString out = QString::fromUtf8(m_adbProcess->readAllStandardOutput());
         m_adbDevices.clear();
 
@@ -176,10 +176,10 @@ NeoController::NeoController(QObject *parent)
     
     qDebug() << "[NeoController] Creating DRCS...";
     // Initialize DRCS - Directional Repetition Constraint System
-    m_drcs = new DRCS(this);
-    connect(m_drcs, &DRCS::enabledChanged, this, &NeoController::drcsChanged);
-    connect(m_drcs, &DRCS::parametersChanged, this, &NeoController::drcsChanged);
-    connect(m_drcs, &DRCS::suppressionChanged, this, &NeoController::drcsChanged);
+    m_drcs = std::make_unique<DRCS>(this);
+    connect(m_drcs.get(), &DRCS::enabledChanged, this, &NeoController::drcsChanged);
+    connect(m_drcs.get(), &DRCS::parametersChanged, this, &NeoController::drcsChanged);
+    connect(m_drcs.get(), &DRCS::suppressionChanged, this, &NeoController::drcsChanged);
     qDebug() << "[NeoController] DRCS initialized";
 
     qDebug() << "[NeoController] Constructor completed successfully!";
@@ -1397,14 +1397,14 @@ bool NeoController::crosshairDetectionEnabled() const
 void NeoController::setCrosshairDetectionEnabled(bool enabled)
 {
     if (!m_crosshairDetector) {
-        m_crosshairDetector = new NeoZ::CrosshairDetector(this);
+        m_crosshairDetector = std::make_unique<NeoZ::CrosshairDetector>(this);
         
         // Setup ADB path and device
         m_crosshairDetector->setAdbPath(getAdbPath());
         m_crosshairDetector->setDeviceId(m_selectedDevice);
         
         // Connect aim assist state change to Y sensitivity adjustment
-        connect(m_crosshairDetector, &NeoZ::CrosshairDetector::aimAssistStateChanged, 
+        connect(m_crosshairDetector.get(), &NeoZ::CrosshairDetector::aimAssistStateChanged, 
                 this, [this](bool active) {
             qDebug() << "[NeoController] Aim assist:" << (active ? "ACTIVE (reducing Y)" : "INACTIVE");
             emit aimAssistStateChanged();

@@ -7,12 +7,12 @@
 AdbConnector::AdbConnector(QObject *parent)
     : QObject(parent),
       m_scanTimer(new QTimer(this)),
-      m_adbProcess(new QProcess(this))
+      m_adbProcess(std::make_unique<QProcess>(this))
 {
     detectAdbPath();
     
     connect(m_scanTimer, &QTimer::timeout, this, &AdbConnector::onScanTimeout);
-    connect(m_adbProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+    connect(m_adbProcess.get(), QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &AdbConnector::processScanResult);
 }
 

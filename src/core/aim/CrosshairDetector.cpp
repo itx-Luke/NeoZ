@@ -11,8 +11,8 @@ CrosshairDetector::CrosshairDetector(QObject* parent)
     m_samplingTimer = new QTimer(this);
     connect(m_samplingTimer, &QTimer::timeout, this, &CrosshairDetector::performSample);
     
-    m_screencapProcess = new QProcess(this);
-    connect(m_screencapProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+    m_screencapProcess = std::make_unique<QProcess>(this);
+    connect(m_screencapProcess.get(), QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
             this, &CrosshairDetector::onScreencapFinished);
     
     qDebug() << "[CrosshairDetector] Initialized - sampling at" << m_samplingIntervalMs << "ms";

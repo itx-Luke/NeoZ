@@ -5,6 +5,7 @@
 #include <QTimer>
 #include <QProcess>
 #include <QImage>
+#include <memory>
 
 namespace NeoZ {
 
@@ -75,7 +76,7 @@ private:
     // ADB
     QString m_adbPath;
     QString m_deviceId;
-    QProcess* m_screencapProcess = nullptr;
+    std::unique_ptr<QProcess> m_screencapProcess;
     
     // Polling
     QTimer* m_samplingTimer = nullptr;

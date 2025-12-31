@@ -8,6 +8,7 @@
 #include <QVariantList>
 #include <QMap>
 #include <QStringList>
+#include <memory>
 #include "../core/ai/AiAdvisor.h"
 #include "../core/input/LogitechHID.h"
 #include "../core/input/InputState.h"
@@ -152,7 +153,7 @@ public:
     double drcsDirectionThreshold() const;
     void setDrcsDirectionThreshold(double value);
     double drcsSuppressionLevel() const;
-    DRCS* drcs() { return m_drcs; }
+    DRCS* drcs() { return m_drcs.get(); }
 
     QStringList adbDevices() const { return m_adbDevices; }
     QString selectedDevice() const { return m_selectedDevice; }
@@ -313,7 +314,7 @@ private:
     QStringList m_adbDevices;
     QString m_selectedDevice;
     bool m_adbManualDisconnected = false;
-    AiAdvisor* m_aiAdvisor = nullptr;
+    std::unique_ptr<AiAdvisor> m_aiAdvisor;
     bool m_aiEnabled;
     bool m_aiProcessing;
     double m_fpsMean;
@@ -338,11 +339,11 @@ private:
     int m_selectedJobId = -1;
     int m_theme = 1;
     LogitechHIDController* m_logitechHID = nullptr;
-    DRCS* m_drcs = nullptr;
+    std::unique_ptr<DRCS> m_drcs;
     QList<InstalledEmulator> m_installedEmulators;
     QTimer* m_saveTimer = nullptr;
-    QProcess* m_adbProcess = nullptr;
-    NeoZ::CrosshairDetector* m_crosshairDetector = nullptr;
+    std::unique_ptr<QProcess> m_adbProcess;
+    std::unique_ptr<NeoZ::CrosshairDetector> m_crosshairDetector;
     struct SensitivitySnapshot {
         double xMultiplier = 0;
         double yMultiplier = 0;

@@ -6,6 +6,7 @@
 #include <QStringList>
 #include <QProcess>
 #include <QTimer>
+#include <memory>
 
 // Represents a detected emulator device
 struct EmulatorDevice {
@@ -82,7 +83,7 @@ private:
     QString m_adbPath;
     
     QTimer* m_scanTimer;
-    QProcess* m_adbProcess;
+    std::unique_ptr<QProcess> m_adbProcess;
     QStringList m_commonPorts = {"5555", "5556", "5554", "62001", "21503"};
     int m_currentPortIndex = 0;
     

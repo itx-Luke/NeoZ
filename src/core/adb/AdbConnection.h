@@ -7,6 +7,7 @@
 #include <QHash>
 #include <QMutex>
 #include <QQueue>
+#include <memory>
 #include <functional>
 
 namespace NeoZ {
@@ -104,7 +105,7 @@ private:
     
     // Async queue
     QQueue<AsyncCommand> m_asyncQueue;
-    QProcess* m_asyncProcess = nullptr;
+    std::unique_ptr<QProcess> m_asyncProcess;
     bool m_asyncBusy = false;
     
     // Batch separator for combining commands

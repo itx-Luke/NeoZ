@@ -1,0 +1,27 @@
+﻿[  0%] Built target hidapi_winapi_autogen_timestamp_deps
+[  0%] Built target hidapi_winapi_autogen
+[  5%] Built target hidapi_winapi
+[  5%] Built target appNeo-Z_copy_res
+[  5%] Built target generate_qmlls_build_ini_file
+[  7%] Built target appNeo-Z_qmlimportscan
+[  8%] Built target appNeo-Z_copy_qml
+[  8%] Built target appNeo-Z_autogen_timestamp_deps
+[  9%] Built target appNeo-Z_autogen
+[ 11%] Building CXX object CMakeFiles/appNeo-Z.dir/appNeo-Z_autogen/mocs_compilation.cpp.obj
+cmake : mingw32-make.exe[3]: *** 
+[CMakeFiles\appNeo-Z.dir\build.make:737: CMakeFiles/appNeo-
+Z.dir/appNeo-Z_autogen/mocs_compilation.cpp.obj] Error 1
+At line:1 char:1
++ cmake --build 
+"D:/NeoZ/Neo-Z/build/Desktop_Qt_6_10_1_MinGW_64_bit-Deb ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (mingw32-make. 
+   ex...pp.obj] Error 1:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+mingw32-make.exe[2]: *** [CMakeFiles\Makefile2:195: 
+CMakeFiles/appNeo-Z.dir/all] Error 2
+mingw32-make.exe[1]: *** [CMakeFiles\Makefile2:202: 
+CMakeFiles/appNeo-Z.dir/rule] Error 2
+mingw32-make.exe: *** [Makefile:168: appNeo-Z] Error 2

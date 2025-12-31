@@ -6,10 +6,10 @@ namespace NeoZ {
 AiManager::AiManager(QObject* parent)
     : QObject(parent)
 {
-    m_advisor = new AiAdvisor(this);
+    m_advisor = std::make_unique<AiAdvisor>(this);
     m_realTimeAi = new RealTimeSensitivityAI(this);
     
-    connect(m_advisor, &AiAdvisor::recommendationReady, 
+    connect(m_advisor.get(), &AiAdvisor::recommendationReady, 
             this, &AiManager::onRecommendationReady);
     
     connect(m_realTimeAi, &RealTimeSensitivityAI::adjusted,

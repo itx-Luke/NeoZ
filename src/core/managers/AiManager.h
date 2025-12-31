@@ -2,6 +2,7 @@
 #define NEOZ_AIMANAGER_H
 
 #include <QObject>
+#include <memory>
 #include "../ai/AiAdvisor.h"
 #include "../perf/RealTimeSensitivityAI.hpp"
 
@@ -46,7 +47,7 @@ public:
     double recommendationConfidence() const { return m_recommendationConfidence; }
     
     // AI Advisor access
-    AiAdvisor* advisor() const { return m_advisor; }
+    AiAdvisor* advisor() const { return m_advisor.get(); }
     
     // Request recommendation
     Q_INVOKABLE void requestRecommendation(const SystemSnapshot& snapshot);
@@ -84,7 +85,7 @@ private:
     double m_recommendedY = 0.0;
     double m_recommendationConfidence = 0.0;
     
-    AiAdvisor* m_advisor = nullptr;
+    std::unique_ptr<AiAdvisor> m_advisor;
     RealTimeSensitivityAI* m_realTimeAi = nullptr;
 };
 
