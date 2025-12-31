@@ -58,7 +58,7 @@ jobs:
       continue-on-error: true
         
     - name: Create GitHub Release
-      uses: softprops/action-gh-release@v1
+      uses: softprops/action-gh-release@v2
       with:
         files: Neo-Z-${{ github.ref_name }}-windows.zip
         body: |
