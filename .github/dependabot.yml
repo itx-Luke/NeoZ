@@ -1,0 +1,17 @@
+version: 2
+updates:
+  # CMake dependencies (FetchContent)
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+    commit-message:
+      prefix: "ci"
+      
+  # Note: CMake FetchContent dependencies are monitored manually
+  # Check hidapi releases: https://github.com/libusb/hidapi/releases

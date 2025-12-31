@@ -1,7 +1,10 @@
 # Neo-Z
 
 [![Build Neo-Z](https://github.com/itx-Luke/test/actions/workflows/build.yml/badge.svg)](https://github.com/itx-Luke/test/actions/workflows/build.yml)
+[![Tests](https://github.com/itx-Luke/test/actions/workflows/tests.yml/badge.svg)](https://github.com/itx-Luke/test/actions/workflows/tests.yml)
+[![Lint](https://github.com/itx-Luke/test/actions/workflows/lint.yml/badge.svg)](https://github.com/itx-Luke/test/actions/workflows/lint.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![GitHub release](https://img.shields.io/github/v/release/itx-Luke/test?include_prereleases)](https://github.com/itx-Luke/test/releases)
 
 **High-performance gaming sensitivity optimization and emulator control suite for Windows.**
 

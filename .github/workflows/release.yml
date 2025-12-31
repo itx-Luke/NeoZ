@@ -1,0 +1,76 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-release:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '6.6.0'
+        host: 'windows'
+        target: 'desktop'
+        arch: 'win64_mingw'
+        modules: 'qtwebview'
+        cache: true
+        
+    - name: Configure Release Build
+      run: cmake -B build -DCMAKE_BUILD_TYPE=Release -G "MinGW Makefiles"
+      
+    - name: Build
+      run: cmake --build build --config Release --parallel
+      
+    - name: Deploy Qt Dependencies
+      run: |
+        cd build
+        windeployqt --release --qmldir ../src/ui appNeo-Z.exe
+        
+    - name: Create Release Package
+      run: |
+        mkdir Neo-Z-Release
+        Copy-Item build/appNeo-Z.exe Neo-Z-Release/
+        Copy-Item -Recurse build/qml Neo-Z-Release/ -ErrorAction SilentlyContinue
+        Copy-Item -Recurse build/platforms Neo-Z-Release/ -ErrorAction SilentlyContinue
+        Copy-Item build/*.dll Neo-Z-Release/ -ErrorAction SilentlyContinue
+        Copy-Item README.md Neo-Z-Release/
+        Copy-Item LICENSE Neo-Z-Release/
+        Compress-Archive -Path Neo-Z-Release/* -DestinationPath Neo-Z-${{ github.ref_name }}-windows.zip
+        
+    - name: Generate Release Notes
+      id: changelog
+      run: |
+        echo "RELEASE_NOTES<<EOF" >> $env:GITHUB_OUTPUT
+        echo "## What's Changed" >> $env:GITHUB_OUTPUT
+        git log --pretty=format:"- %s" $(git describe --tags --abbrev=0 HEAD^)..HEAD >> $env:GITHUB_OUTPUT
+        echo "EOF" >> $env:GITHUB_OUTPUT
+      continue-on-error: true
+        
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: Neo-Z-${{ github.ref_name }}-windows.zip
+        body: |
+          ## Neo-Z ${{ github.ref_name }}
+          
+          ### Installation
+          1. Download the zip file
+          2. Extract to your preferred location
+          3. Run `appNeo-Z.exe`
+          
+          ### Requirements
+          - Windows 10/11 64-bit
+          - Android emulator with ADB enabled
+        draft: false
+        prerelease: ${{ contains(github.ref_name, 'alpha') || contains(github.ref_name, 'beta') }}

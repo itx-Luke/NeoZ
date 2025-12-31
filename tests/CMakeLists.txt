@@ -106,6 +106,42 @@ target_link_libraries(tst_drcs PRIVATE Qt6::Test Qt6::Core)
 add_test(NAME tst_drcs COMMAND tst_drcs)
 
 # ========================================
+# Test: End-to-End Integration Tests  
+# ========================================
+qt_add_executable(tst_e2e
+    integration/tst_e2e.cpp
+    ${PROJECT_SRC_DIR}/backend/NeoController.h
+    ${PROJECT_SRC_DIR}/backend/NeoController.cpp
+    ${PROJECT_SRC_DIR}/core/ai/AiAdvisor.h
+    ${PROJECT_SRC_DIR}/core/ai/AiAdvisor.cpp
+    ${PROJECT_SRC_DIR}/core/ai/GeminiClient.h
+    ${PROJECT_SRC_DIR}/core/ai/GeminiClient.cpp
+    ${PROJECT_SRC_DIR}/core/input/InputHook.h
+    ${PROJECT_SRC_DIR}/core/input/InputHook.cpp
+    ${PROJECT_SRC_DIR}/core/input/WindowsInputReader.h
+    ${PROJECT_SRC_DIR}/core/input/WindowsInputReader.cpp
+    ${PROJECT_SRC_DIR}/core/input/LogitechHID.h
+    ${PROJECT_SRC_DIR}/core/input/LogitechHID.cpp
+    ${PROJECT_SRC_DIR}/core/aim/CrosshairDetector.h
+    ${PROJECT_SRC_DIR}/core/aim/CrosshairDetector.cpp
+    ${COMMON_SOURCES}
+)
+
+target_include_directories(tst_e2e PRIVATE ${TEST_INCLUDE_DIRS})
+target_link_libraries(tst_e2e PRIVATE
+    Qt6::Test
+    Qt6::Quick
+    Qt6::Gui
+    Qt6::Network
+)
+
+if(WIN32)
+    target_link_libraries(tst_e2e PRIVATE hidapi)
+endif()
+
+add_test(NAME tst_e2e COMMAND tst_e2e)
+
+# ========================================
 # Summary
 # ========================================
 message(STATUS "Neo-Z Tests configured:")
@@ -113,3 +149,4 @@ message(STATUS "  - tst_neocontroller (Integration)")
 message(STATUS "  - tst_logger (Unit)")
 message(STATUS "  - tst_sensitivity (Unit)")
 message(STATUS "  - tst_drcs (Unit)")
+message(STATUS "  - tst_e2e (End-to-End)")
