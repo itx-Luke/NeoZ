@@ -1,0 +1,42 @@
+name: Lint
+
+on:
+  pull_request:
+    branches: [ main, develop ]
+    paths:
+      - '**.cpp'
+      - '**.h'
+      - '**.hpp'
+
+jobs:
+  clang-format:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Check C++ formatting
+      uses: jidicula/clang-format-action@v4.13.0
+      with:
+        clang-format-version: '17'
+        check-path: 'src'
+        fallback-style: 'Google'
+
+  qml-lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      
+    - name: Install Qt
+      uses: jurplel/install-qt-action@v3
+      with:
+        version: '6.6.0'
+        cache: true
+        
+    - name: Run qmllint
+      run: |
+        find src/ui -name "*.qml" -exec qmllint {} \;
+      continue-on-error: true
