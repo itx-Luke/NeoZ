@@ -30,6 +30,16 @@ jobs:
     - name: Build
       run: cmake --build build --config Release --parallel
       
+    - name: Cache Build
+      uses: actions/cache@v4
+      with:
+        path: |
+          build/_deps
+          build/CMakeFiles
+        key: ${{ runner.os }}-cmake-${{ hashFiles('CMakeLists.txt') }}
+        restore-keys: |
+          ${{ runner.os }}-cmake-
+      
     - name: Run Tests
       run: ctest --test-dir build --output-on-failure
       continue-on-error: true
