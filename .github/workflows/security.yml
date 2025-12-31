@@ -41,14 +41,14 @@ jobs:
         
     - name: Setup MinGW PATH
       run: |
-        $mingwPath = "$env:IQTA_TOOLS\mingw1120_64\bin"
+        $mingwPath = "$env:IQTA_TOOLS\mingw900_64\bin"
         echo $mingwPath >> $env:GITHUB_PATH
         echo "CC=$mingwPath\gcc.exe" >> $env:GITHUB_ENV
         echo "CXX=$mingwPath\g++.exe" >> $env:GITHUB_ENV
         
     - name: Configure
       run: |
-        $mingwPath = "$env:IQTA_TOOLS\mingw1120_64\bin"
+        $mingwPath = "$env:IQTA_TOOLS\mingw900_64\bin"
         cmake -B build -G "MinGW Makefiles" `
           -DCMAKE_CXX_COMPILER="$mingwPath\g++.exe" `
           -DCMAKE_C_COMPILER="$mingwPath\gcc.exe" `
