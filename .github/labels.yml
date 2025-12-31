@@ -1,0 +1,107 @@
+# GitHub Labels Configuration
+# Run 'gh label sync' or push this file to apply
+
+# Priority Labels
+- name: priority/critical
+  color: b60205
+  description: Urgent - needs immediate attention
+
+- name: priority/high
+  color: d93f0b
+  description: High priority
+
+- name: priority/medium
+  color: fbca04
+  description: Medium priority
+
+- name: priority/low
+  color: 0e8a16
+  description: Low priority, nice to have
+
+# Type Labels
+- name: type/bug
+  color: d73a4a
+  description: Something isn't working
+
+- name: type/feature
+  color: a2eeef
+  description: New feature request
+
+- name: type/enhancement
+  color: 84b6eb
+  description: Improvement to existing feature
+
+- name: type/docs
+  color: 0075ca
+  description: Documentation only
+
+- name: type/refactor
+  color: e4e669
+  description: Code refactoring
+
+- name: type/test
+  color: bfd4f2
+  description: Test related changes
+
+# Status Labels
+- name: status/in-progress
+  color: ededed
+  description: Currently being worked on
+
+- name: status/blocked
+  color: 000000
+  description: Blocked by external factor
+
+- name: status/review-needed
+  color: fbca04
+  description: Needs code review
+
+- name: status/ready-for-merge
+  color: 0e8a16
+  description: Ready to be merged
+
+# Component Labels
+- name: component/ui
+  color: 7057ff
+  description: QML UI changes
+
+- name: component/backend
+  color: 1d76db
+  description: C++ backend changes
+
+- name: component/adb
+  color: ffc107
+  description: ADB integration
+
+- name: component/sensitivity
+  color: 5319e7
+  description: Sensitivity/DRCS system
+
+- name: component/ai
+  color: c5def5
+  description: AI/Gemini integration
+
+# Meta Labels
+- name: good-first-issue
+  color: 7057ff
+  description: Good for newcomers
+
+- name: help-wanted
+  color: 008672
+  description: Extra attention needed
+
+- name: dependencies
+  color: 0366d6
+  description: Dependency updates
+
+- name: github-actions
+  color: 000000
+  description: CI/CD changes
+
+- name: wontfix
+  color: ffffff
+  description: Will not be addressed
+
+- name: duplicate
+  color: cfd3d7
+  description: Duplicate issue or PR

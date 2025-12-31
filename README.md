@@ -3,6 +3,8 @@
 [![Build Neo-Z](https://github.com/itx-Luke/test/actions/workflows/build.yml/badge.svg)](https://github.com/itx-Luke/test/actions/workflows/build.yml)
 [![Tests](https://github.com/itx-Luke/test/actions/workflows/tests.yml/badge.svg)](https://github.com/itx-Luke/test/actions/workflows/tests.yml)
 [![Lint](https://github.com/itx-Luke/test/actions/workflows/lint.yml/badge.svg)](https://github.com/itx-Luke/test/actions/workflows/lint.yml)
+[![Security](https://github.com/itx-Luke/test/actions/workflows/security.yml/badge.svg)](https://github.com/itx-Luke/test/actions/workflows/security.yml)
+[![codecov](https://codecov.io/gh/itx-Luke/test/graph/badge.svg)](https://codecov.io/gh/itx-Luke/test)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![GitHub release](https://img.shields.io/github/v/release/itx-Luke/test?include_prereleases)](https://github.com/itx-Luke/test/releases)
 
