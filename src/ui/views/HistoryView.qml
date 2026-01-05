@@ -10,49 +10,12 @@ RowLayout {
 
     property int selectedVersion: 0
 
-    // Mock version data
-    property var versions: [
-        {
-            id: "v000007",
-            timestamp: "2025-12-09 17:00",
-            source: "AI Recommendation",
-            cm360: "31.8 cm",
-            isCurrent: true,
-            isFavorite: true
-        },
-        {
-            id: "v000006",
-            timestamp: "2025-12-09 16:45",
-            source: "Manual",
-            cm360: "34.6 cm",
-            isCurrent: false,
-            isFavorite: false
-        },
-        {
-            id: "v000005",
-            timestamp: "2025-12-09 16:30",
-            source: "Rollback",
-            cm360: "33.2 cm",
-            isCurrent: false,
-            isFavorite: true
-        },
-        {
-            id: "v000004",
-            timestamp: "2025-12-09 16:15",
-            source: "Impact",
-            cm360: "35.0 cm",
-            isCurrent: false,
-            isFavorite: false
-        },
-        {
-            id: "v000003",
-            timestamp: "2025-12-09 16:00",
-            source: "Default",
-            cm360: "36.8 cm",
-            isCurrent: false,
-            isFavorite: false
-        }
-    ]
+    // Version data should come from backend
+    property var versions: []
+
+    // Safe access helpers
+    property bool hasVersions: versions.length > 0
+    property var selectedVersionData: hasVersions ? versions[selectedVersion] : null
 
     // === LEFT: VERSION TIMELINE ===
     GlassPanel {
@@ -267,7 +230,8 @@ RowLayout {
                 Layout.fillWidth: true
 
                 Text {
-                    text: "Version " + root.versions[root.selectedVersion].id + (root.versions[root.selectedVersion].isCurrent ? " (Current)" : "")
+                    visible: root.hasVersions
+                    text: root.selectedVersionData ? "Version " + root.selectedVersionData.id + (root.selectedVersionData.isCurrent ? " (Current)" : "") : ""
                     color: Style.primary
                     font.pixelSize: 20
                     font.bold: true
@@ -278,14 +242,16 @@ RowLayout {
                 }
 
                 Text {
-                    text: root.versions[root.selectedVersion].isFavorite ? "★" : "☆"
-                    color: root.versions[root.selectedVersion].isFavorite ? "#FFD700" : Style.textSecondary
+                    visible: root.hasVersions
+                    text: root.selectedVersionData && root.selectedVersionData.isFavorite ? "★" : "☆"
+                    color: root.selectedVersionData && root.selectedVersionData.isFavorite ? "#FFD700" : Style.textSecondary
                     font.pixelSize: 24
                 }
             }
 
             Text {
-                text: "Source: " + root.versions[root.selectedVersion].source + " · Reason: Resolution change adaptation"
+                visible: root.hasVersions
+                text: root.selectedVersionData ? "Source: " + root.selectedVersionData.source + " · Reason: Resolution change adaptation" : "No version data available"
                 color: Style.textSecondary
                 font.pixelSize: 11
             }

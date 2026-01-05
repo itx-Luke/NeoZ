@@ -193,6 +193,17 @@ NeoController::~NeoController()
     saveConfig();
     saveJobHistory();
 
+    // Terminate the optimizer process if running
+    if (m_optimizerProcess) {
+        m_optimizerProcess->terminate();
+        if (!m_optimizerProcess->waitForFinished(1000)) {
+            m_optimizerProcess->kill();
+            m_optimizerProcess->waitForFinished(500);
+        }
+        delete m_optimizerProcess;
+        m_optimizerProcess = nullptr;
+    }
+
     for (auto &j : m_activeJobs) {
         if (j.process) {
             j.process->kill();
@@ -827,6 +838,49 @@ void NeoController::applyOptimization()
     qDebug() << "[NeoController] Applying optimization with X:" << m_xMultiplier << "Y:" << m_yMultiplier;
     saveConfig();
     emit sensitivityChanged();
+}
+
+void NeoController::launchOptimizer()
+{
+    // If optimizer is already running, bring it to focus (don't launch another)
+    if (m_optimizerProcess && m_optimizerProcess->state() == QProcess::Running) {
+        qDebug() << "[NeoController] Optimizer already running";
+        return;
+    }
+    
+    // Launch NeoZ_Optimizer.exe as a child process (closes with main app)
+    QString optimizerPath = QCoreApplication::applicationDirPath() + "/NeoZ_Optimizer.exe";
+    
+    qDebug() << "[NeoController] Launching Optimizer:" << optimizerPath;
+    
+    if (!QFileInfo::exists(optimizerPath)) {
+        qWarning() << "[NeoController] Optimizer not found at:" << optimizerPath;
+        return;
+    }
+    
+    // Clean up old process if exists
+    if (m_optimizerProcess) {
+        delete m_optimizerProcess;
+        m_optimizerProcess = nullptr;
+    }
+    
+    // Create and start as child process
+    m_optimizerProcess = new QProcess(this);
+    m_optimizerProcess->setProgram(optimizerPath);
+    m_optimizerProcess->setWorkingDirectory(QCoreApplication::applicationDirPath());
+    
+    connect(m_optimizerProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished),
+            this, [this](int exitCode, QProcess::ExitStatus) {
+        qDebug() << "[NeoController] Optimizer exited with code:" << exitCode;
+    });
+    
+    m_optimizerProcess->start();
+    
+    if (!m_optimizerProcess->waitForStarted(3000)) {
+        qWarning() << "[NeoController] Failed to launch Optimizer";
+        delete m_optimizerProcess;
+        m_optimizerProcess = nullptr;
+    }
 }
 
 void NeoController::scanForDevices()

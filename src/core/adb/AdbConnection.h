@@ -13,8 +13,7 @@
 namespace NeoZ {
 
 /**
- * @brief High-performance ADB connection with command batching.
- * 
+ * @brief
  * Features:
  * - Command batching: Combines multiple commands into single shell session
  * - Caching: Short-lived cache for frequently polled values

@@ -143,6 +143,9 @@ endif()
 # --- ADB Service (separate executable) ---
 add_subdirectory(src/adb_service)
 
+# --- Zereca Control Plane ---
+add_subdirectory(src/zereca)
+
 qt_add_executable(appNeo-Z
     MANUAL_FINALIZATION
     ${PROJECT_SOURCES}
@@ -163,6 +166,7 @@ endif()
 # Mark Style.qml and ThemeManager.qml as Singletons BEFORE adding to module
 set_source_files_properties(src/ui/style/Style.qml PROPERTIES QT_QML_SINGLETON_TYPE true)
 set_source_files_properties(src/ui/style/ThemeManager.qml PROPERTIES QT_QML_SINGLETON_TYPE true)
+set_source_files_properties(src/ui/style/CyberpunkColors.qml PROPERTIES QT_QML_SINGLETON_TYPE true)
 # TEMPORARILY DISABLED - debugging crash
 # set_source_files_properties(src/ui/singletons/AppSettings.qml PROPERTIES QT_QML_SINGLETON_TYPE true)
 # set_source_files_properties(src/ui/singletons/AppState.qml PROPERTIES QT_QML_SINGLETON_TYPE true)
@@ -198,6 +202,16 @@ qt_add_qml_module(appNeo-Z
         src/ui/components/GlassSlider.qml
         src/ui/components/RadialSlider.qml
         src/ui/components/MonitorOptimizationWindow.qml
+        
+        # --- Cyberpunk Optimization Components ---
+        src/ui/components/HealthRing.qml
+        src/ui/components/ThreatRadar.qml
+        src/ui/components/EventLog.qml
+        src/ui/components/GlowButton.qml
+        src/ui/components/ProfileCard.qml
+        src/ui/components/OptimizationTile.qml
+        src/ui/components/OrbitingOrb.qml
+        src/ui/style/CyberpunkColors.qml
 
         # --- Core NeoZ Theme-Aware Components ---
         src/ui/components/core/NeoZText.qml
@@ -233,6 +247,7 @@ qt_add_qml_module(appNeo-Z
         assets/sensitivity.svg
         assets/settings.svg
         assets/frost_background.mp4
+
         QML_FILES src/ui/views/SensitivityView.qml
 )
 
@@ -246,6 +261,7 @@ target_link_libraries(appNeo-Z
     Qt6::WebView # Required for Spline 3D embedding
     Qt6::Multimedia # Required for video background
     hidapi       # Required for Logitech HID++ DPI control
+    zereca       # Zereca adaptive performance control plane
 )
 
 include(GNUInstallDirs)
@@ -262,4 +278,7 @@ option(BUILD_TESTING "Build unit tests" OFF)
 if(BUILD_TESTING)
     add_subdirectory(tests)
 endif()
+
+# --- OPTIMIZER (Separate Application) ---
+add_subdirectory(src/optimizer)
 

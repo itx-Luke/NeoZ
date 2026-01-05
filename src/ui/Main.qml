@@ -191,6 +191,7 @@ Window {
                     DashboardView {
                         id: dashboardView
                         onOpenMonitorOptimization: monitorOptWindow.open()
+                        onOpenOptimizePopup: Backend.launchOptimizer()
                     }
 
                     // Index 1: Sensitivity

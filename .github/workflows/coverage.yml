@@ -21,24 +21,34 @@ jobs:
         host: 'windows'
         target: 'desktop'
         arch: 'win64_mingw'
-        tools: 'tools_mingw90'
+        tools: 'tools_mingw1120'
         modules: 'qtwebview'
         cache: true
         
     - name: Setup MinGW PATH
       run: |
-        $mingwPath = "$env:IQTA_TOOLS\mingw900_64\bin"
+        # Find MinGW installation - Qt 6.6.0 uses MinGW 11.2.0
+        $mingwPath = "$env:IQTA_TOOLS\mingw1120_64\bin"
+        if (-not (Test-Path $mingwPath)) {
+          $mingwPath = "$env:RUNNER_WORKSPACE\Qt\Tools\mingw1120_64\bin"
+        }
+        if (-not (Test-Path $mingwPath)) {
+          echo "Available Qt Tools directories:"
+          Get-ChildItem "$env:IQTA_TOOLS" -ErrorAction SilentlyContinue
+          throw "MinGW not found"
+        }
+        echo "Using MinGW from: $mingwPath"
         echo $mingwPath >> $env:GITHUB_PATH
         echo "CC=$mingwPath\gcc.exe" >> $env:GITHUB_ENV
         echo "CXX=$mingwPath\g++.exe" >> $env:GITHUB_ENV
+        echo "MINGW_PATH=$mingwPath" >> $env:GITHUB_ENV
         
     - name: Configure with Coverage
       run: |
-        $mingwPath = "$env:IQTA_TOOLS\mingw900_64\bin"
         cmake -B build -DBUILD_TESTING=ON -DCMAKE_BUILD_TYPE=Debug -G "MinGW Makefiles" `
-          -DCMAKE_CXX_COMPILER="$mingwPath\g++.exe" `
-          -DCMAKE_C_COMPILER="$mingwPath\gcc.exe" `
-          -DCMAKE_MAKE_PROGRAM="$mingwPath\mingw32-make.exe" `
+          -DCMAKE_CXX_COMPILER="$env:MINGW_PATH\g++.exe" `
+          -DCMAKE_C_COMPILER="$env:MINGW_PATH\gcc.exe" `
+          -DCMAKE_MAKE_PROGRAM="$env:MINGW_PATH\mingw32-make.exe" `
           -DCMAKE_CXX_FLAGS="--coverage"
       
     - name: Build

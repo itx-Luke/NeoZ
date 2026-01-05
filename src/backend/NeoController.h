@@ -230,6 +230,7 @@ public:
 
     // Pipeline control
     Q_INVOKABLE void applyOptimization();
+    Q_INVOKABLE void launchOptimizer();
     int presetConfidence() const;
     bool inputAuthorityEnabled() const;
     void setInputAuthorityEnabled(bool enabled);
@@ -354,6 +355,9 @@ private:
     SensitivitySnapshot m_snapshot;
     bool m_hasSnapshot = false;
     NeoZ::VelocityCurve* m_velocityCurve = nullptr;
+    
+    // Optimizer process (child process that closes with main app)
+    QProcess* m_optimizerProcess = nullptr;
     
     // Telemetry
     double m_mouseVelocity = 0.0;

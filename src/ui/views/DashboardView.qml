@@ -9,9 +9,12 @@ ScrollView {
     clip: true
     ScrollBar.vertical.policy: ScrollBar.AsNeeded
     contentWidth: availableWidth
-    
+
     // Signal to open Monitor Optimization Window
-    signal openMonitorOptimization()
+    signal openMonitorOptimization
+
+    // Signal to open Optimize Popup
+    signal openOptimizePopup
 
     ColumnLayout {
         anchors.fill: parent
@@ -441,78 +444,31 @@ ScrollView {
                         Layout.fillHeight: true
                         spacing: 8
 
-                        // Optimize Button - Full width at top
+                        // NEW Simple Optimize Button
                         Rectangle {
-                            id: optimizeButton
+                            id: optimizeBtn
                             Layout.fillWidth: true
-                            Layout.preferredHeight: 36
-                            Layout.bottomMargin: 20
-                            radius: 8
-
-                            // Purple/Magenta gradient matching AI Advisor
-                            gradient: Gradient {
-                                orientation: Gradient.Horizontal
-                                GradientStop {
-                                    position: 0.0
-                                    color: "#7C3AED"
-                                }
-                                GradientStop {
-                                    position: 0.5
-                                    color: "#A855F7"
-                                }
-                                GradientStop {
-                                    position: 1.0
-                                    color: "#E040FB"
-                                }
-                            }
-
-                            // Purple glow border
-                            Rectangle {
-                                anchors.fill: parent
-                                anchors.margins: -2
-                                radius: parent.radius + 2
-                                color: "transparent"
-                                border.color: Qt.rgba(0.6, 0.25, 0.97, 0.5)
-                                border.width: 2
-                                z: -1
-                            }
+                            Layout.preferredHeight: 40
+                            Layout.bottomMargin: 16
+                            radius: 10
+                            color: "#9D00FF"
 
                             Text {
                                 anchors.centerIn: parent
-                                text: "OPTIMIZE NOW"
+                                text: "⚡ OPTIMIZE NOW"
                                 color: "#FFFFFF"
-                                font.pixelSize: 13
+                                font.pixelSize: 14
                                 font.bold: true
-                                font.letterSpacing: 2
                             }
 
                             MouseArea {
                                 anchors.fill: parent
                                 cursorShape: Qt.PointingHandCursor
-                                hoverEnabled: true
-                                onEntered: {
-                                    optimizeButton.scale = 1.02;
-                                    optimizeButton.opacity = 1.0;
-                                }
-                                onExited: {
-                                    optimizeButton.scale = 1.0;
-                                    optimizeButton.opacity = 0.95;
-                                }
-                                onClicked: Backend.applyOptimization()
-                            }
-
-                            Behavior on scale {
-                                NumberAnimation {
-                                    duration: 150
-                                    easing.type: Easing.OutCubic
+                                onClicked: {
+                                    console.log(">>> OPTIMIZE BUTTON CLICKED <<<");
+                                    root.openOptimizePopup();
                                 }
                             }
-                            Behavior on opacity {
-                                NumberAnimation {
-                                    duration: 150
-                                }
-                            }
-                            opacity: 0.95
                         }
 
                         Text {

@@ -110,19 +110,28 @@ int main(int argc, char *argv[])
     QQuickStyle::setStyle("Basic");
     Logger::info("QuickStyle set to Basic", "Main");
     
-    // Initialize FastConfig (memory-cached settings)
+    // ========== Initialize FastConfig V3 ==========
     QString configPath = QStandardPaths::writableLocation(QStandardPaths::AppDataLocation) + "/neo-z.ini";
     NeoZ::initGlobalConfig(configPath);
-    Logger::info(QString("Config file: %1").arg(configPath), "Main");
+    
+    // Enable V3 features for production
+    if (NeoZ::globalConfig()) {
+        NeoZ::globalConfig()->setFlushThreshold(100);     // Snapshot every 100 writes
+        NeoZ::globalConfig()->setFlushDelay(500);         // 500ms debounce before disk write
+        NeoZ::globalConfig()->setCrashSafeWrites(true);   // Atomic write (temp + rename)
+        NeoZ::globalConfig()->setBackupEnabled(true);     // Create .bak file
+    }
+    Logger::info(QString("FastConfig V3 initialized: %1").arg(configPath), "Main");
     
     // Initialize all core services (managers)
     Logger::info("Initializing services...", "Main");
     NeoZ::Services::initialize(&app);
     Logger::info("Services initialized", "Main");
     
-    // Cleanup services on exit
+    // Cleanup services and config on exit
     QObject::connect(&app, &QCoreApplication::aboutToQuit, []() {
         NeoZ::Services::shutdown();
+        NeoZ::destroyGlobalConfig();  // Flush and cleanup FastConfig
     });
     
     // Register C++ backend types for QML access
@@ -165,4 +174,3 @@ int main(int argc, char *argv[])
 
     return app.exec();
 }
-
